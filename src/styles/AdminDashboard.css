@@ -1,0 +1,40 @@
+.admin-dashboard {
+  max-width: 600px;
+  margin: 3em auto;
+  background: #232526;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  padding: 2.5em 2em 2em 2em;
+  text-align: center;
+}
+.admin-dashboard h1 {
+  color: #00e676;
+  margin-bottom: 0.5em;
+}
+.admin-dashboard p {
+  color: #faff5a;
+  font-size: 1.2em;
+  margin-bottom: 2em;
+}
+.admin-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2em;
+  align-items: center;
+}
+.admin-actions .btn {
+  background: #faff5a;
+  color: #232526;
+  font-weight: 700;
+  padding: 0.8em 2em;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1em;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  margin: 0.2em 0;
+}
+.admin-actions .btn:hover {
+  background: #00e676;
+  color: #fff;
+} 
