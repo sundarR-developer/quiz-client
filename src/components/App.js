@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 import AdminDashboard from './AdminDashboard';
 import StudentDashboard from './StudentDashboard';
-import Login from './Login';
+import Login from './login';
 import Register from './Register';
 import Quiz from "./Quiz";
 import Result from "./Result";

@@ -35,7 +35,7 @@ export default function ExamForm() {
       console.error('Failed to submit answers:', err);
       // Show error to user
     }
-  }, [id, answers, user, token, navigate]);
+  }, [id, answers, navigate]);
 
   // Fetch exam and questions
   useEffect(() => {

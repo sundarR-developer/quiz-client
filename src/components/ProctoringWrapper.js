@@ -62,13 +62,7 @@ function ProctoringWrapper({ children }) {
     return () => {
       if (currentVideo && currentVideo.srcObject) {
         currentVideo.srcObject.getTracks().forEach(track => track.stop());
-        if (videoRef.current) {
-          videoRef.current.srcObject = null;
-        }
-        console.log('Webcam stream stopped');
       }
-      // Extra safety: force stop all webcams
-      if (window.forceStopAllWebcams) window.forceStopAllWebcams();
     };
   }, []);
 
