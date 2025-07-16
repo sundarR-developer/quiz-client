@@ -19,7 +19,7 @@ export const updateResult = (index) => async (dispatch) => {
 
 /* insert user data */
 export const usePublishResult = (resultData) => {
-  const { result, username, attempts, points, achieved, exam } = resultData;
+  const { result, username } = resultData;
   // postServerData
   (async () => {
     try {
