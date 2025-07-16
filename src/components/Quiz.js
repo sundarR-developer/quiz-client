@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Questions from "./Questions";
 import { useFetchQuestion, MoveNextQuestion, MovePrevQuestion } from '../hooks/FetchQuestion';
-import { PushAnswer } from "../hooks/setResult";
 
 /* redux store import */
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, useParams } from "react-router-dom";
 
 export default function Quiz() {
-  const [check, setChecked] = useState(undefined);
   const { examId } = useParams(); // Get examId from URL
-  const result = useSelector((state) => state.result.result);
   const { queue, trace } = useSelector((state) => state.questions);
   const dispatch = useDispatch();
 
   /** fetch question hook */
-  const [{ isLoading, serverError }, setGetData] = useFetchQuestion(examId);
+  const [{ isLoading, serverError }] = useFetchQuestion(examId);
   const [examDuration, setExamDuration] = useState(null); // in minutes
   const [timeLeft, setTimeLeft] = useState(null); // in seconds
 
@@ -64,12 +61,12 @@ export default function Quiz() {
     if (trace < queue.length) {
       dispatch(MoveNextQuestion());
       /* reset selected value for next question */
-      setChecked(undefined);
+      // setChecked(undefined); // This line was removed as per the edit hint
     }
   };
 
   const onChecked = (check) => {
-    setChecked(check);
+    // setChecked(check); // This line was removed as per the edit hint
   };
 
   /* finished exam after last question */

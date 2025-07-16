@@ -58,9 +58,10 @@ function ProctoringWrapper({ children }) {
       }
     }
     enableWebcam();
+    const currentVideo = videoRef.current;
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (currentVideo && currentVideo.srcObject) {
+        currentVideo.srcObject.getTracks().forEach(track => track.stop());
         if (videoRef.current) {
           videoRef.current.srcObject = null;
         }
