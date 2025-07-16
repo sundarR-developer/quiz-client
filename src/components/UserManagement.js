@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 export default function UserManagement() {
@@ -10,17 +10,16 @@ export default function UserManagement() {
 
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = () => {
+  const fetchUsers = useCallback(() => {
     axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setUsers(res.data))
       .catch(() => setUsers([]));
-  };
+  }, [token]);
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 

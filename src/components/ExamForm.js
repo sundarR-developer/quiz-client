@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/ExamForm.css';
@@ -11,15 +11,14 @@ export default function ExamForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timer, setTimer] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted] = useState(false);
   const timerRef = useRef();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
 
   // Submit handler
-  const handleSubmit = async (e) => {
-    if (e) e.preventDefault();
+  const handleSubmit = useCallback(async () => {
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user?._id; // Make sure this is the MongoDB ObjectId string
     try {
@@ -36,7 +35,7 @@ export default function ExamForm() {
       console.error('Failed to submit answers:', err);
       // Show error to user
     }
-  };
+  }, [id, answers, user, token, navigate]);
 
   // Fetch exam and questions
   useEffect(() => {
@@ -63,7 +62,7 @@ export default function ExamForm() {
         setError('Failed to fetch exam details.');
         setLoading(false);
       });
-  }, [id]); // Only id as dependency
+  }, [id, user, token, user._id]); // Only id as dependency
 
   // Timer logic
   useEffect(() => {
@@ -75,7 +74,7 @@ export default function ExamForm() {
       }
     }
     return () => clearTimeout(timerRef.current);
-  }, [timer, submitted, questions.length]);
+  }, [timer, submitted, questions.length, handleSubmit]);
 
   const handleChange = (qid, value) => {
     setAnswers({ ...answers, [qid]: value });
