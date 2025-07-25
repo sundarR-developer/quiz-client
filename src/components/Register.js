@@ -12,7 +12,8 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/auth/register`, form);
+      await axios.post(`https://quiz-server-7.onrender.com/api/auth/register`, form);
+
       setMsg('Registration successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
