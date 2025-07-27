@@ -11,7 +11,7 @@ export default function UserManagement() {
   const token = localStorage.getItem('token');
 
   const fetchUsers = useCallback(() => {
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users`, {
+    axios.get(`https://quiz-server-8.onrender.com/api/users`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setUsers(res.data))
