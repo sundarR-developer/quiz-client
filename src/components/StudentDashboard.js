@@ -23,7 +23,7 @@ export default function StudentDashboard() {
     } else {
       setLoading(true);
       setError('');
-      axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/my-exams`, {
+      axios.get(`https://quiz-server-8.onrender.com/api/my-exams`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
