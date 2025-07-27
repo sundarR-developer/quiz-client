@@ -23,7 +23,7 @@ export default function ExamForm() {
     const userId = user?._id; // Make sure this is the MongoDB ObjectId string
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_HOSTNAME}/api/result`,
+        `https://quiz-server-8.onrender.com/api/result`,
         {
           examId: id, // <-- use id from useParams
           answers,   // { [questionId]: selectedOptionIndex }
@@ -41,7 +41,7 @@ export default function ExamForm() {
   useEffect(() => {
     setLoading(true);
     setError('');
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${id}`, {
+    axios.get(`https://quiz-server-8.onrender.com/api/exams/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
