@@ -6,7 +6,7 @@ const ResultTable = () => {
 
   useEffect(() => {
     getServerData(
-      `${process.env.REACT_APP_SERVER_HOSTNAME}/api/result`,
+      `https://quiz-server-8.onrender.com/api/result`,
       (res) => {
         setData(res);
       }
