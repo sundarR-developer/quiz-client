@@ -22,11 +22,8 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     
     try {
-      const payload = {
-  email: form.email.trim().toLowerCase(),
-  password: form.password
-};
-const res = await axios.post(`https://quiz-server-8.onrender.com/api/auth/login`, payload);
+      
+const res = await axios.post(`https://quiz-server-8.onrender.com/api/auth/login`, form);
 
       
       console.log('Login response:', res.data); // Debug log
