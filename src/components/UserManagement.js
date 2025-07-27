@@ -44,7 +44,7 @@ export default function UserManagement() {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users/${id}`, editForm, {
+      await axios.put(`https://quiz-server-8.onrender.com/api/users/${id}`, editForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User updated!');
@@ -58,7 +58,7 @@ export default function UserManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users/${id}`, {
+      await axios.delete(`https://quiz-server-8.onrender.com/api/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User deleted!');
