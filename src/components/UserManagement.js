@@ -26,7 +26,7 @@ export default function UserManagement() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users`, form, {
+      await axios.post(`https://quiz-server-8.onrender.com/api/users`, form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User created!');
