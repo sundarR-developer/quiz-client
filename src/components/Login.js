@@ -21,7 +21,7 @@ export default function Login({ onLogin }) {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/auth/login`, form);
+      const res = await axios.post(`https://quiz-server-8.onrender.com/api/auth/login`, form);
       console.log('Login response:', res.data); // Debug log
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
