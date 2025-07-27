@@ -14,7 +14,7 @@ export default function ExamDetails() {
   useEffect(() => {
     setLoading(true);
     setError('');
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${id}`, {
+    axios.get(`https://quiz-server-8.onrender.com/api/exams/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => {
