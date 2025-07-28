@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -12,8 +12,8 @@ const ExamForm = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch exam with retry logic
-  const fetchExamData = async () => {
+  // ✅ Fix: Wrap fetchExamData in useCallback
+  const fetchExamData = useCallback(async () => {
     let retries = 3;
     setLoading(true);
     setError(null);
@@ -43,7 +43,7 @@ const ExamForm = () => {
         setLoading(false);
       }
     }
-  };
+  }, [id, token]); // ✅ Include dependencies here
 
   // Countdown timer
   useEffect(() => {
@@ -54,21 +54,21 @@ const ExamForm = () => {
       }, 1000);
     } else if (timer === 0 && exam) {
       console.log("⏰ Time's up!");
-      // You can trigger submission here
+      // Optional: trigger submission
     }
 
     return () => clearInterval(interval);
   }, [timer, exam]);
 
+  // ✅ No ESLint warning now
   useEffect(() => {
     fetchExamData();
-  }, [id]);
+  }, [fetchExamData]);
 
   if (loading) return <div style={{ textAlign: "center" }}>Loading...</div>;
   if (error) return <div style={{ color: "red", textAlign: "center" }}>{error}</div>;
   if (!exam) return null;
 
-  // Convert seconds to mm:ss format
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -83,7 +83,7 @@ const ExamForm = () => {
       <p><strong>Time Remaining:</strong> {formatTime(timer)}</p>
 
       <ol>
-        {questions.map((q, index) => (
+        {questions.map((q) => (
           <li key={q._id}>
             <p>{q.question}</p>
             <ul>
