@@ -27,9 +27,10 @@ const ExamForm = () => {
             timeout: 20000,
           }
         );
-        setExam(response.data);
-        setQuestions(response.data.questions || []);
-        setTimer(response.data.duration * 60); // duration in minutes
+        const data = response.data;
+        setExam(data);
+        setQuestions(data.questions || []);
+        setTimer(data.duration * 60); // Convert minutes to seconds
         return;
       } catch (err) {
         retries--;
@@ -44,6 +45,21 @@ const ExamForm = () => {
     }
   };
 
+  // Countdown timer
+  useEffect(() => {
+    let interval;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prevTime) => prevTime - 1);
+      }, 1000);
+    } else if (timer === 0 && exam) {
+      console.log("⏰ Time's up!");
+      // You can trigger submission here
+    }
+
+    return () => clearInterval(interval);
+  }, [timer, exam]);
+
   useEffect(() => {
     fetchExamData();
   }, [id]);
@@ -52,10 +68,19 @@ const ExamForm = () => {
   if (error) return <div style={{ color: "red", textAlign: "center" }}>{error}</div>;
   if (!exam) return null;
 
+  // Convert seconds to mm:ss format
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="exam-container">
       <h2>{exam.title}</h2>
       <p>{exam.description}</p>
+
+      <p><strong>Time Remaining:</strong> {formatTime(timer)}</p>
 
       <ol>
         {questions.map((q, index) => (
@@ -69,8 +94,6 @@ const ExamForm = () => {
           </li>
         ))}
       </ol>
-
-      <p>Time Remaining: {timer} seconds</p>
     </div>
   );
 };
