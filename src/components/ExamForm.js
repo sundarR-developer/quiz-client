@@ -52,11 +52,11 @@ export default function ExamForm() {
         const examData = res.data;
 
         // Permission check
-        if (!examData.assignedTo || !examData.assignedTo.map(String).includes(String(user._id))) {
-          setError('You are not assigned to this exam.');
-          setLoading(false);
-          return;
-        }
+        //if (!examData.assignedTo || !examData.assignedTo.map(String).includes(String(user._id))) {
+        //  setError('You are not assigned to this exam.');
+        //  setLoading(false);
+        //  return;
+       // }
 
         setExam(examData);
         setQuestions(examData.questions || []);
