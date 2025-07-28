@@ -7,44 +7,55 @@ const WebcamCheck = ({ onVerified }) => {
 
   useEffect(() => {
     async function getCameraPermission() {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        try {
-          // Optional: log devices for debugging
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          console.log("Available media devices:");
-          devices.forEach(device => {
-            console.log(`${device.kind}: ${device.label} (${device.deviceId})`);
-          });
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasVideoInput = devices.some(device => device.kind === 'videoinput');
+        const hasAudioInput = devices.some(device => device.kind === 'audioinput');
 
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        console.log('Available devices:', devices);
 
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-            videoRef.current.play();
-            setIsCameraOn(true);
-            setError(null);
-          }
-        } catch (err) {
-          console.error("Error accessing camera:", err);
-
-          if (err.name === 'NotFoundError' || err.name === 'OverconstrainedError') {
-            setError("No camera or microphone device was found. Please ensure they are connected and enabled.");
-          } else if (err.name === 'NotAllowedError') {
-            setError("Camera and microphone access was denied. Please allow access and refresh the page.");
-          } else if (err.name === 'NotReadableError') {
-            setError("Your camera or microphone might be in use by another application.");
-          } else {
-            setError("Webcam and microphone access is required for proctoring. Please enable permissions in your browser settings and refresh the page.");
-          }
-
-          setIsCameraOn(false);
+        if (!hasVideoInput && !hasAudioInput) {
+          setError('No camera or microphone devices found. Please connect at least one.');
+          return;
         }
-      } else {
-        setError("Your browser does not support the necessary features for proctoring.");
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: hasVideoInput,
+          audio: hasAudioInput,
+        });
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
+          setIsCameraOn(true);
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Error accessing media devices:', err);
+
+        switch (err.name) {
+          case 'NotFoundError':
+            setError('No camera/mic found. Please connect a device.');
+            break;
+          case 'NotAllowedError':
+            setError('Permission denied. Allow camera/mic access and refresh.');
+            break;
+          case 'NotReadableError':
+            setError('Camera/mic is in use by another application.');
+            break;
+          default:
+            setError('Unable to access camera/mic. Please check your browser settings.');
+        }
+
+        setIsCameraOn(false);
       }
     }
 
-    getCameraPermission();
+    if (navigator.mediaDevices?.getUserMedia) {
+      getCameraPermission();
+    } else {
+      setError('Your browser does not support webcam or microphone access.');
+    }
   }, []);
 
   return (
@@ -61,9 +72,7 @@ const WebcamCheck = ({ onVerified }) => {
             autoPlay
             muted
           />
-          {!isCameraOn && !error && (
-            <p className="text-gray-700">Requesting camera access...</p>
-          )}
+          {!isCameraOn && !error && <p className="text-gray-700">Requesting camera access...</p>}
           {isCameraOn && (
             <>
               <p className="text-green-700 mb-4">
