@@ -12,10 +12,22 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`https://quiz-server-8.onrender.com/api/auth/register`, form);
+      const res = await axios.post(`https://quiz-server-8.onrender.com/api/auth/register`, form);
 
-      setMsg('Registration successful! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 1500);
+      // Save token and user to localStorage
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+
+      setMsg('Registration successful! Logging you in...');
+
+      // Redirect based on user role
+      setTimeout(() => {
+        if (res.data.user.role === 'admin') {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/student-dashboard');
+        }
+      }, 1500);
     } catch (err) {
       setMsg(err.response?.data?.msg || err.message || 'Error');
     }
