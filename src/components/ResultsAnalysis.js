@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_BASE_URL = 'https://quiz-server-9.onrender.com/api';
+
 function ResultsAnalysis() {
   const [exams, setExams] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('/api/exams').then(res => setExams(res.data));
+    const token = localStorage.getItem('token');
+    axios.get(`${API_BASE_URL}/exams`, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).then(res => setExams(res.data))
+    .catch(err => console.error('Failed to fetch exams:', err));
   }, []);
 
   return (
@@ -39,4 +45,4 @@ function ResultsAnalysis() {
   );
 }
 
-export default ResultsAnalysis; 
+export default ResultsAnalysis;
