@@ -27,7 +27,7 @@ export const usePublishResult = (resultData) => {
         throw new Error("Couldn't get result!");
       }
       await postServerData(
-        `https://quiz-server-8.onrender.com/api/result`,
+        `https://quiz-server-9.onrender.com/api/result`,
         resultData,
         (data) => data
       );
