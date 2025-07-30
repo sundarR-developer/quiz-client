@@ -13,14 +13,16 @@ function ExamManagement() {
   const [assignExam, setAssignExam] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
 
+  const API_BASE_URL = 'https://quiz-server-9.onrender.com/api';
+
   const fetchExams = () => {
-    axios.get('https://quiz-server-8.onrender.com/api/exams').then(res => setExams(res.data));
+    axios.get(`${API_BASE_URL}/exams`).then(res => setExams(res.data));
   };
 
   useEffect(() => {
     fetchExams();
-    axios.get('/api/questions').then(res => setQuestions(res.data));
-    axios.get('/api/users', {
+    axios.get(`${API_BASE_URL}/questions`).then(res => setQuestions(res.data));
+    axios.get(`${API_BASE_URL}/users`, {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     }).then(res => {
       setStudents(res.data.filter(u => u.role === 'student'));
@@ -41,7 +43,7 @@ function ExamManagement() {
       duration: form.duration,
       questions: []
     };
-    const res = await axios.post('/api/exams', payload);
+    const res = await axios.post(`${API_BASE_URL}/exams`, payload);
     setExams([...exams, res.data]);
     setForm({ title: '', description: '', date: '', duration: '' });
     fetchExams(); // Refresh exams after adding a new one
@@ -65,7 +67,7 @@ function ExamManagement() {
   const handleSaveQuestions = async () => {
     const token = localStorage.getItem('token'); // or sessionStorage.getItem('token')
     await axios.put(
-      `/api/exams/${selectedExam._id}/questions`,
+      `${API_BASE_URL}/exams/${selectedExam._id}/questions`,
       { questionIds: selectedQuestions },
       {
         headers: {
@@ -170,7 +172,7 @@ function ExamManagement() {
           <button onClick={async () => {
             const token = localStorage.getItem('token');
             await axios.post(
-              `/api/exams/${assignExam._id}/assign`,
+              `${API_BASE_URL}/exams/${assignExam._id}/assign`,
               { studentIds: selectedStudents },
               { headers: { Authorization: `Bearer ${token}` } }
             );
