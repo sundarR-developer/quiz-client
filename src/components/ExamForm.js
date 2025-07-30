@@ -22,7 +22,7 @@ export default function ExamForm() {
     const userId = user?._id;
     try {
       const response = await axios.post(
-        `https://quiz-server-8.onrender.com/api/result`,
+        `https://quiz-server-9.onrender.com/api/result`,
         {
           examId: id,
           answers,
@@ -44,7 +44,7 @@ export default function ExamForm() {
 
     while (retries > 0) {
       try {
-        const response = await axios.get(`https://quiz-server-8.onrender.com/api/exams/${id}`, {
+        const response = await axios.get(`https://quiz-server-9.onrender.com/api/exams/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
           timeout: 15000
         });
