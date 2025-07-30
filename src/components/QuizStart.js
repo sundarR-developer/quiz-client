@@ -14,7 +14,7 @@ const QuizStart = () => {
 
   useEffect(() => {
     async function fetchExam() {
-      const examData = await getServerData(`https://quiz-server-8.onrender.com/api/exams/${examId}`);
+      const examData = await getServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
       setExam(examData);
     }
     fetchExam();
