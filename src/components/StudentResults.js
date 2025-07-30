@@ -18,7 +18,7 @@ export default function StudentResults() {
     }
     setLoading(true);
     setError('');
-    axios.get(`https://quiz-server-8.onrender.com/api/results/${userId}`)
+    axios.get(`https://quiz-server-9.onrender.com/api/results/${userId}`)
       .then(res => {
         setResults(res.data);
         setLoading(false);
