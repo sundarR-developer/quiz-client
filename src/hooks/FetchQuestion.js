@@ -25,7 +25,7 @@ export const useFetchQuestion = (examId) => {
         if (!examId) throw new Error("No Exam ID provided");
         
         const exam = await getServerData(
-          `https://quiz-server-8.onrender.com/api/exams/${examId}`,
+          `https://quiz-server-9.onrender.com/api/exams/${examId}`,
           (data) => data
         );
         
