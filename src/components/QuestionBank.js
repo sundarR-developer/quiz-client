@@ -8,9 +8,11 @@ function QuestionBank() {
   const [editingId, setEditingId] = useState(null);
   const [exams, setExams] = useState([]);
 
+  const API_BASE_URL = 'https://quiz-server-9.onrender.com/api';
+
   useEffect(() => {
-    axios.get('/api/questions').then(res => setQuestions(res.data));
-    axios.get('/api/exams').then(res => setExams(res.data));
+    axios.get(`${API_BASE_URL}/questions`).then(res => setQuestions(res.data));
+    axios.get(`${API_BASE_URL}/exams`).then(res => setExams(res.data));
   }, []);
 
   const handleChange = (e) => {
@@ -43,14 +45,14 @@ function QuestionBank() {
     try {
       let res;
       if (editingId) {
-        res = await axios.put(`/api/questions/${editingId}`, payload);
+        res = await axios.put(`${API_BASE_URL}/questions/${editingId}`, payload);
       } else {
-        res = await axios.post('/api/questions', payload);
+        res = await axios.post(`${API_BASE_URL}/questions`, payload);
         // Automatic assignment: add the new question to the exam's questions array
         const newQuestionId = res.data._id;
         const token = localStorage.getItem('token');
         // Fetch the current exam to get its questions
-        const examRes = await axios.get(`/api/exams/${form.examId}`, {
+        const examRes = await axios.get(`${API_BASE_URL}/exams/${form.examId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const existingQuestionIds = (examRes.data.questions || []).map(q => typeof q === 'string' ? q : q._id);
@@ -58,7 +60,7 @@ function QuestionBank() {
         const updatedQuestionIds = [...existingQuestionIds, newQuestionId];
         // Update the exam's questions array
         await axios.put(
-          `/api/exams/${form.examId}/questions`,
+          `${API_BASE_URL}/exams/${form.examId}/questions`,
           { questionIds: updatedQuestionIds },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -66,7 +68,7 @@ function QuestionBank() {
       }
       setForm({ question: '', options: ['', '', ''], answer: 0, type: 'mcq', explanation: '' });
       setEditingId(null);
-      const questionsRes = await axios.get('/api/questions');
+      const questionsRes = await axios.get(`${API_BASE_URL}/questions`);
       setQuestions(questionsRes.data);
     } catch (err) {
       alert(err.response?.data?.error || err.response?.data?.msg || err.message);
@@ -85,7 +87,7 @@ function QuestionBank() {
   };
 
   const handleDelete = async (id) => {
-    await axios.delete(`/api/questions/${id}`);
+    await axios.delete(`${API_BASE_URL}/questions/${id}`);
     setQuestions(questions.filter(q => q._id !== id));
   };
 
