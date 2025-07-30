@@ -14,7 +14,7 @@ function ExamManagement() {
   const [selectedStudents, setSelectedStudents] = useState([]);
 
   const fetchExams = () => {
-    axios.get('/api/exams').then(res => setExams(res.data));
+    axios.get('https://quiz-server-8.onrender.com/api/exams').then(res => setExams(res.data));
   };
 
   useEffect(() => {
