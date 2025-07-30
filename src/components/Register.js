@@ -12,7 +12,7 @@ export default function Register() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post(`https://quiz-server-8.onrender.com/api/auth/register`, form);
+      const res = await axios.post(`https://quiz-server-9.onrender.com/api/auth/register`, form);
 
       // Save token and user to localStorage
       localStorage.setItem('token', res.data.token);
