@@ -15,7 +15,7 @@ export default function ExamList() {
   async function fetchExams() {
     try {
       setIsLoading(true);
-      const data = await getServerData(`https://quiz-server-8.onrender.com/api/exams`);
+      const data = await getServerData(`https://quiz-server-9.onrender.com/api/exams`);
       setExams(data);
     } catch (err) {
       setError(err);
@@ -27,7 +27,7 @@ export default function ExamList() {
   async function handleDelete(examId) {
     if (window.confirm('Are you sure you want to delete this exam?')) {
       try {
-        await deleteServerData(`https://quiz-server-8.onrender.com/api/exams/${examId}`);
+        await deleteServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
         fetchExams();
       } catch (err) {
         alert('Failed to delete exam.');
