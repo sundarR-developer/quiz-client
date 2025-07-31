@@ -22,7 +22,7 @@ export default function ExamForm() {
     const userId = user?._id;
     try {
       const response = await axios.post(
-        `https://quiz-server-9.onrender.com/api/result`,
+        `https://quiz-server-9.onrender.com/api/results`,
         {
           examId: id,
           answers,
