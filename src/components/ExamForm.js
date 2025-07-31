@@ -26,7 +26,13 @@ export default function ExamForm() {
         {
           examId: id,
           answers,
-          userId
+          userId,
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}` 
+          }
         }
       );
       setSubmitted(true);
@@ -34,7 +40,7 @@ export default function ExamForm() {
     } catch (err) {
       console.error('Failed to submit answers:', err);
     }
-  }, [id, answers, navigate, user]);
+  }, [id, answers, navigate, user, token]);
 
   // Fetch exam with retry logic
   const fetchExamWithRetry = useCallback(async () => {
