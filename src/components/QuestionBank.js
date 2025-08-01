@@ -45,7 +45,8 @@ function QuestionBank() {
       alert('Please select a valid answer.');
       return;
     }
-    const payload = { ...form, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '', examId: form.examId };
+    const { examId, ...questionData } = form;
+    const payload = { ...questionData, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '' };
     console.log("Submitting question payload:", payload);
     try {
       if (editingId) {
