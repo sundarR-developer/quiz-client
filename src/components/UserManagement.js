@@ -11,7 +11,7 @@ export default function UserManagement() {
   const token = localStorage.getItem('token');
 
   const fetchUsers = useCallback(() => {
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users`, {
+    axios.get(`https://quiz-server-9.onrender.com/api/users`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setUsers(res.data))
@@ -26,7 +26,7 @@ export default function UserManagement() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users`, form, {
+      await axios.post(`https://quiz-server-9.onrender.com/api/users`, form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User created!');
@@ -44,7 +44,7 @@ export default function UserManagement() {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users/${id}`, editForm, {
+      await axios.put(`https://quiz-server-9.onrender.com/api/users/${id}`, editForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User updated!');
@@ -58,7 +58,7 @@ export default function UserManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/users/${id}`, {
+      await axios.delete(`https://quiz-server-9.onrender.com/api/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('User deleted!');
@@ -132,3 +132,4 @@ export default function UserManagement() {
     </div>
   );
 }
+

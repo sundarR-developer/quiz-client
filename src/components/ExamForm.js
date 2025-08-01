@@ -11,7 +11,7 @@ export default function ExamForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timer, setTimer] = useState(0);
-  const [submitted] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const timerRef = useRef();
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
@@ -19,60 +19,78 @@ export default function ExamForm() {
 
   // Submit handler
   const handleSubmit = useCallback(async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const userId = user?._id; // Make sure this is the MongoDB ObjectId string
+    const userId = user?._id;
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_HOSTNAME}/api/result`,
+        `https://quiz-server-9.onrender.com/api/results`,
         {
-          examId: id, // <-- use id from useParams
-          answers,   // { [questionId]: selectedOptionIndex }
-          userId
+          examId: id,
+          answers,
+          userId,
+        },
+        {
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}` 
+          }
         }
       );
+      setSubmitted(true);
       navigate('/result', { state: { resultData: response.data } });
     } catch (err) {
       console.error('Failed to submit answers:', err);
-      // Show error to user
     }
-  }, [id, answers, navigate]);
+  }, [id, answers, navigate, user, token]);
 
-  // Fetch exam and questions
-  useEffect(() => {
+  // Fetch exam with retry logic
+  const fetchExamWithRetry = useCallback(async () => {
+    let retries = 3;
     setLoading(true);
     setError('');
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        setExam(res.data);
-        if (
-          !res.data.assignedTo ||
-          !res.data.assignedTo.map(String).includes(String(user._id))
-        ) {
+
+    while (retries > 0) {
+      try {
+        const response = await axios.get(`https://quiz-server-9.onrender.com/api/exams/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 15000
+        });
+
+        const data = response.data;
+
+        if (!data.assignedTo || !data.assignedTo.map(String).includes(String(user._id))) {
           setError('You are not assigned to this exam.');
-          setLoading(false);
-          return;
+          break;
         }
-        setTimer(res.data.duration * 60); // duration in minutes
-        setQuestions(res.data.questions || []); // Use populated questions
+
+        setExam(data);
+        setQuestions(data.questions || []);
+        setTimer(data.duration * 60);
+        return;
+      } catch (err) {
+        retries--;
+        if (retries === 0) {
+          setError('Failed to fetch exam details. Please try again later.');
+        } else {
+          await new Promise((res) => setTimeout(res, 3000));
+        }
+      } finally {
         setLoading(false);
-      })
-      .catch(() => {
-        setError('Failed to fetch exam details.');
-        setLoading(false);
-      });
-  }, [id, user, token, user._id]); // Only id as dependency
+      }
+    }
+  }, [id, token, user._id]);
+
+  useEffect(() => {
+    fetchExamWithRetry();
+  }, [fetchExamWithRetry]);
 
   // Timer logic
   useEffect(() => {
     if (timer > 0 && !submitted) {
-      timerRef.current = setTimeout(() => setTimer(timer - 1), 1000);
-    } else if (timer === 0 && !submitted) {
-      if (questions.length > 0) {
-        handleSubmit();
-      }
+      timerRef.current = setTimeout(() => setTimer((prev) => prev - 1), 1000);
+    } else if (timer === 0 && !submitted && questions.length > 0) {
+      handleSubmit();
     }
+
     return () => clearTimeout(timerRef.current);
   }, [timer, submitted, questions.length, handleSubmit]);
 
@@ -85,7 +103,6 @@ export default function ExamForm() {
   if (!exam) return <div className="flex justify-center items-center min-h-screen"><span className="text-gray-900 text-xl font-semibold">Exam not found.</span></div>;
   if (!questions.length) return <div className="flex justify-center items-center min-h-screen"><span className="text-gray-900 text-xl font-semibold">No questions found for this exam.</span></div>;
 
-  // Format timer as mm:ss
   const minutes = Math.floor(timer / 60);
   const seconds = timer % 60;
 
@@ -94,7 +111,7 @@ export default function ExamForm() {
       <div className="w-full max-w-2xl bg-white rounded shadow-md p-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900">{exam.title}</h2>
         <div className="mb-6 text-lg font-semibold text-blue-700"><b>Time Left:</b> {minutes}:{seconds.toString().padStart(2, '0')}</div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="flex flex-col gap-6">
           {questions.map((q, idx) => (
             <div key={q._id} className="mb-2 p-4 bg-gray-100 rounded">
               <div className="mb-2 font-semibold">Q{idx + 1}: {q.question}</div>
@@ -132,4 +149,4 @@ export default function ExamForm() {
       </div>
     </div>
   );
-} 
+}

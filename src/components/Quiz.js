@@ -27,7 +27,7 @@ export default function Quiz() {
   useEffect(() => {
     async function fetchExamDuration() {
       try {
-        const res = await fetch(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${examId}`);
+        const res = await fetch(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
         const data = await res.json();
         if (data.duration) {
           setExamDuration(data.duration);

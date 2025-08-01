@@ -27,7 +27,7 @@ export const usePublishResult = (resultData) => {
         throw new Error("Couldn't get result!");
       }
       await postServerData(
-        `${process.env.REACT_APP_SERVER_HOSTNAME}/api/result`,
+        `https://quiz-server-9.onrender.com/api/result`,
         resultData,
         (data) => data
       );
@@ -36,3 +36,4 @@ export const usePublishResult = (resultData) => {
     }
   })();
 };
+

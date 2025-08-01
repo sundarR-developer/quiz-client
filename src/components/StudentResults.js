@@ -9,6 +9,7 @@ export default function StudentResults() {
   const [selectedResult, setSelectedResult] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
   const userId = user?._id;
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +19,9 @@ export default function StudentResults() {
     }
     setLoading(true);
     setError('');
-    axios.get(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/results/${userId}`)
+    axios.get(`https://quiz-server-9.onrender.com/api/results/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then(res => {
         setResults(res.data);
         setLoading(false);
@@ -28,7 +31,7 @@ export default function StudentResults() {
         setResults([]);
         setLoading(false);
       });
-  }, [userId, navigate]);
+  }, [userId, navigate, token]);
 
   if (selectedResult) {
     // Detailed feedback view (reuse Result.js logic inline)

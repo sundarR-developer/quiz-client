@@ -20,8 +20,8 @@ const AnalysisDashboard = () => {
       try {
         setIsLoading(true);
         // Fetch both exam details and analysis data
-        const examData = await getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${examId}`);
-        const analysisData = await getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/exams/${examId}/analysis`);
+        const examData = await getServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
+        const analysisData = await getServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}/analysis`);
         setExam(examData);
         setAnalysis(analysisData);
       } catch (err) {
