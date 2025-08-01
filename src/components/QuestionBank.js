@@ -48,11 +48,10 @@ function QuestionBank() {
     const payload = { ...form, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '', examId: form.examId };
     console.log("Submitting question payload:", payload);
     try {
-      let res;
       if (editingId) {
-        res = await axios.put(`${API_BASE_URL}/questions/${editingId}`, payload, config);
+        await axios.put(`${API_BASE_URL}/questions/${editingId}`, payload, config);
       } else {
-        res = await axios.post(`${API_BASE_URL}/questions`, payload, config);
+        await axios.post(`${API_BASE_URL}/questions`, payload, config);
         // The question is created, now just reload the page to see the changes.
         window.location.reload();
       }
