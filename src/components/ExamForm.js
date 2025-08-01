@@ -40,7 +40,7 @@ export default function ExamForm() {
     } catch (err) {
       console.error('Failed to submit answers:', err);
     }
-  }, [id, answers, navigate, user, token]);
+  }, [id, answers, navigate, user?._id, token]);
 
   // Fetch exam with retry logic
   const fetchExamWithRetry = useCallback(async () => {
@@ -77,7 +77,7 @@ export default function ExamForm() {
         setLoading(false);
       }
     }
-  }, [id, token, user._id]);
+  }, [id, token, user?._id]);
 
   useEffect(() => {
     fetchExamWithRetry();
