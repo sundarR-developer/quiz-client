@@ -1,4 +1,4 @@
-
+// client/src/components/QuestionBank.js
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 
@@ -53,19 +53,7 @@ function QuestionBank() {
         res = await axios.put(`${API_BASE_URL}/questions/${editingId}`, payload, config);
       } else {
         res = await axios.post(`${API_BASE_URL}/questions`, payload, config);
-        // Automatic assignment: add the new question to the exam's questions array
-        const newQuestionId = res.data._id;
-        // Fetch the current exam to get its questions
-        const examRes = await axios.get(`${API_BASE_URL}/exams/${form.examId}`, config);
-        const existingQuestionIds = (examRes.data.questions || []).map(q => typeof q === 'string' ? q : q._id);
-        // Add the new question's ID
-        const updatedQuestionIds = [...existingQuestionIds, newQuestionId];
-        // Update the exam's questions array
-        await axios.put(
-          `${API_BASE_URL}/exams/${form.examId}/questions`,
-          { questionIds: updatedQuestionIds },
-          config
-        );
+        // The question is created, now just reload the page to see the changes.
         window.location.reload();
       }
       setForm({ question: '', options: ['', '', ''], answer: 0, type: 'mcq', explanation: '' });
