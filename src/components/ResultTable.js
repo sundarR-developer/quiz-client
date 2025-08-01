@@ -48,3 +48,4 @@ const ResultTable = () => {
 };
 
 export default ResultTable;
+

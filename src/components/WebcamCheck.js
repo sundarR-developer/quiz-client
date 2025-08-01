@@ -94,4 +94,8 @@ const WebcamCheck = ({ onVerified }) => {
   );
 };
 
+<<<<<<< HEAD
 export default WebcamCheck;
+=======
+export default WebcamCheck;
+>>>>>>> c71539b29e45bdff7ea4129748ae2fbf9eb8e3bf
