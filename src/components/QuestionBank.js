@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 
 function QuestionBank() {
@@ -10,12 +10,15 @@ function QuestionBank() {
 
   const API_BASE_URL = 'https://quiz-server-9.onrender.com/api';
   const token = localStorage.getItem('token');
-  const config = { headers: { Authorization: `Bearer ${token}` } };
+
+  const config = useMemo(() => ({
+    headers: { Authorization: `Bearer ${token}` },
+  }), [token]);
 
   useEffect(() => {
     axios.get(`${API_BASE_URL}/questions`, config).then(res => setQuestions(res.data));
     axios.get(`${API_BASE_URL}/exams`, config).then(res => setExams(res.data));
-  }, []);
+  }, [config]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
