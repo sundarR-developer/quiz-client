@@ -49,12 +49,17 @@ function ExamManagement() {
     fetchExams(); // Refresh exams after adding a new one
   };
 
-  const handleOpenQuestionSelector = (exam) => {
-    setSelectedExam(exam);
-    // Ensure selectedQuestions is an array of IDs (not objects)
-    setSelectedQuestions(
-      (exam.questions || []).map(q => typeof q === 'string' ? q : q._id)
-    );
+  const handleOpenQuestionSelector = async (exam) => {
+    // Refetch questions to ensure the list is up-to-date
+    const questionsRes = await axios.get(`${API_BASE_URL}/questions`);
+    setQuestions(questionsRes.data);
+
+    // Refetch the specific exam with its questions fully populated
+    const examRes = await axios.get(`${API_BASE_URL}/exams/${exam._id}/with-questions`);
+    const freshExam = examRes.data;
+
+    setSelectedExam(freshExam);
+    setSelectedQuestions((freshExam.questions || []).map(q => q._id));
     setShowQuestionSelector(true);
   };
 
@@ -75,13 +80,10 @@ function ExamManagement() {
         }
       }
     );
-    setExams(exams.map(exam =>
-      exam._id === selectedExam._id ? { ...exam, questions: selectedQuestions } : exam
-    ));
     setShowQuestionSelector(false);
     setSelectedExam(null);
     setSelectedQuestions([]);
-    fetchExams(); // Refresh exams after saving questions
+    fetchExams(); // Refetch all exams to update the list view
   };
 
   const handleOpenAssignModal = (exam) => {
