@@ -54,14 +54,12 @@ function ExamManagement() {
     const questionsRes = await axios.get(`${API_BASE_URL}/questions`);
     setQuestions(questionsRes.data);
 
-    // Refetch the specific exam to get its latest question list
-    const examRes = await axios.get(`${API_BASE_URL}/exams/${exam._id}`);
+    // Refetch the specific exam with its questions fully populated
+    const examRes = await axios.get(`${API_BASE_URL}/exams/${exam._id}/with-questions`);
     const freshExam = examRes.data;
 
     setSelectedExam(freshExam);
-    setSelectedQuestions(
-      (freshExam.questions || []).map(q => typeof q === 'string' ? q : q._id)
-    );
+    setSelectedQuestions((freshExam.questions || []).map(q => q._id));
     setShowQuestionSelector(true);
   };
 
@@ -192,4 +190,3 @@ function ExamManagement() {
 }
 
 export default ExamManagement; 
-
