@@ -49,4 +49,3 @@ const Questions = ({ onChecked }) => {
 };
 
 export default Questions;
-
