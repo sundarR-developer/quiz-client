@@ -45,8 +45,16 @@ function QuestionBank() {
       alert('Please select a valid answer.');
       return;
     }
-    const { examId, ...questionData } = form;
-    const payload = { ...questionData, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '' };
+    if (!form.examId) {
+      alert('Please select an exam.');
+      return;
+    }
+    
+    // Remove this line that's removing examId from the payload
+    // const { examId, ...questionData } = form;
+    
+    // Include examId in the payload
+    const payload = { ...form, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '' };
     console.log("Submitting question payload:", payload);
     try {
       if (editingId) {
