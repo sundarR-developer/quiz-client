@@ -56,4 +56,3 @@ export async function getServerDataWithAuth(url) {
   };
   return axios.get(url, config);
 }
-
