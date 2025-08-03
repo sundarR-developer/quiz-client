@@ -45,13 +45,8 @@ function QuestionBank() {
       alert('Please select a valid answer.');
       return;
     }
-    if (!form.examId) {
-      alert('Please select an exam first.');
-      return;
-    }
-
-    // The entire form state is now the payload, including the examId.
-    const payload = { ...form };
+    const { examId, ...questionData } = form;
+    const payload = { ...questionData, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '' };
     console.log("Submitting question payload:", payload);
     try {
       if (editingId) {
