@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getServerData } from '../helper/helper';
+import { getServerDataWithAuth } from '../helper/helper';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import '../styles/AnalysisDashboard.css';
@@ -19,11 +19,11 @@ const AnalysisDashboard = () => {
     async function fetchData() {
       try {
         setIsLoading(true);
-        // Fetch both exam details and analysis data
-        const examData = await getServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
-        const analysisData = await getServerData(`https://quiz-server-9.onrender.com/api/exams/${examId}/analysis`);
-        setExam(examData);
-        setAnalysis(analysisData);
+        // Fetch both exam details and analysis data with authentication
+        const examResponse = await getServerDataWithAuth(`https://quiz-server-9.onrender.com/api/exams/${examId}`);
+        const analysisResponse = await getServerDataWithAuth(`https://quiz-server-9.onrender.com/api/exams/${examId}/analysis`);
+        setExam(examResponse.data);
+        setAnalysis(analysisResponse.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -138,4 +138,5 @@ const AnalysisDashboard = () => {
   );
 };
 
-export default AnalysisDashboard; 
+export default AnalysisDashboard;
+
