@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getServerDataWithAuth } from '../helper/helper';
+import { getServerDataWithAuth, flagResult } from '../helper/helper';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import '../styles/AnalysisDashboard.css';
@@ -127,7 +127,7 @@ const AnalysisDashboard = () => {
                   <td className="py-3 px-4">{result.user?.name || result.user?.email || 'Unknown'}</td>
                   <td className="py-3 px-4">{result.score}</td>
                   <td className="py-3 px-4">{result.total}</td>
-                  <td className="py-3 px-4">{result.score === result.total ? 'Pass' : 'Fail'}</td>
+                  <td className="py-3 px-4">{flagResult(result.total, result.score) ? 'Pass' : 'Fail'}</td>
                 </tr>
               ))}
             </tbody>
