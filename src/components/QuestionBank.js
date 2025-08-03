@@ -79,7 +79,8 @@ function QuestionBank() {
       options: q.options,
       answer: q.answer,
       type: q.type || 'mcq',
-      explanation: q.explanation || ''
+      explanation: q.explanation || '',
+      examId: q.examId  // Make sure to preserve the examId when editing
     });
     setEditingId(q._id);
   };
@@ -93,18 +94,20 @@ function QuestionBank() {
     <div className="text-gray-900">
       <h2 className="text-lg font-semibold mb-4">Question Bank</h2>
       <form onSubmit={handleSubmit} className="mb-4 flex flex-wrap gap-2 items-center">
-        <select
-          name="examId"
-          value={form.examId || ''}
-          onChange={handleChange}
-          required
-          className="border rounded px-2 py-1 text-gray-900 w-48"
-        >
-          <option value="">Select Exam</option>
-          {exams.map(exam => (
-            <option key={exam._id} value={exam._id}>{exam.title}</option>
-          ))}
-        </select>
+        {!editingId && (
+          <select
+            name="examId"
+            value={form.examId || ''}
+            onChange={handleChange}
+            required
+            className="border rounded px-2 py-1 text-gray-900 w-48"
+          >
+            <option value="">Select Exam</option>
+            {exams.map(exam => (
+              <option key={exam._id} value={exam._id}>{exam.title}</option>
+            ))}
+          </select>
+        )}
         <input name="question" value={form.question} onChange={handleChange} placeholder="Question" required className="border rounded px-2 py-1 text-gray-900 w-72" />
         {form.options.map((opt, i) => (
           <input key={i} name={`option${i}`} value={opt} onChange={handleChange} placeholder={`Option ${i + 1}`} required className="border rounded px-2 py-1 text-gray-900 w-48" />
