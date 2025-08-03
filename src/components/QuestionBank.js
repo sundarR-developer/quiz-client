@@ -34,6 +34,23 @@ function QuestionBank() {
     }
   };
 
+  const handleEdit = (q) => {
+    setForm({
+      question: q.question,
+      options: q.options,
+      answer: q.answer,
+      type: q.type || 'mcq',
+      explanation: q.explanation || '',
+      examId: q.examId  // Make sure to preserve the examId when editing
+    });
+    setEditingId(q._id);
+  };
+
+  const handleDelete = async (id) => {
+    await axios.delete(`${API_BASE_URL}/questions/${id}`, config);
+    setQuestions(questions.filter(q => q._id !== id));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Validation: all options must be non-empty, answer must be a valid index
@@ -45,13 +62,12 @@ function QuestionBank() {
       alert('Please select a valid answer.');
       return;
     }
-    if (!form.examId) {
+    
+    // Only validate examId if we're not editing
+    if (!editingId && !form.examId) {
       alert('Please select an exam.');
       return;
     }
-    
-    // Remove this line that's removing examId from the payload
-    // const { examId, ...questionData } = form;
     
     // Include examId in the payload
     const payload = { ...form, options: form.options, type: form.type || 'mcq', explanation: form.explanation || '' };
@@ -71,23 +87,6 @@ function QuestionBank() {
     } catch (err) {
       alert(err.response?.data?.error || err.response?.data?.msg || err.message);
     }
-  };
-
-  const handleEdit = (q) => {
-    setForm({
-      question: q.question,
-      options: q.options,
-      answer: q.answer,
-      type: q.type || 'mcq',
-      explanation: q.explanation || '',
-      examId: q.examId  // Make sure to preserve the examId when editing
-    });
-    setEditingId(q._id);
-  };
-
-  const handleDelete = async (id) => {
-    await axios.delete(`${API_BASE_URL}/questions/${id}`, config);
-    setQuestions(questions.filter(q => q._id !== id));
   };
 
   return (
