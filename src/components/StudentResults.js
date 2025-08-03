@@ -46,15 +46,32 @@ export default function StudentResults() {
         <h2 className="text-lg font-semibold mb-4">Question Feedback</h2>
         <div>
           {resultData.feedback && resultData.feedback.length > 0 ? (
-            resultData.feedback.map((item, idx) => (
-              <div key={idx} className="mb-6 p-4 bg-gray-100 rounded">
-                <div className="mb-2 font-semibold">Q{idx + 1}: {item.question}</div>
-                <p className="mb-1"><span className="font-semibold">Your Answer:</span> {item.userAnswer !== null && item.userAnswer !== undefined ? item.userAnswer : "No answer"}</p>
-                <div className="mb-1"><span className="font-semibold">Correct Answer:</span> {item.correctAnswer !== undefined ? String(item.correctAnswer) : 'N/A'}</div>
-                <div className="mb-1"><span className="font-semibold">Explanation:</span> {item.explanation || 'No explanation provided.'}</div>
-                <div><span className="font-semibold">Result:</span> <span className={item.isCorrect ? 'text-green-600' : 'text-red-600'}>{item.isCorrect ? 'Correct' : 'Incorrect'}</span></div>
-              </div>
-            ))
+            resultData.feedback.map((item, idx) => {
+              // Convert index to actual answer text
+              const getUserAnswerText = () => {
+                if (item.userAnswer === null || item.userAnswer === undefined) {
+                  return "No answer";
+                }
+                return item.options && item.options[item.userAnswer] ? item.options[item.userAnswer] : item.userAnswer;
+              };
+              
+              const getCorrectAnswerText = () => {
+                if (item.correctAnswer === undefined) {
+                  return 'N/A';
+                }
+                return item.options && item.options[item.correctAnswer] ? item.options[item.correctAnswer] : item.correctAnswer;
+              };
+              
+              return (
+                <div key={idx} className="mb-6 p-4 bg-gray-100 rounded">
+                  <div className="mb-2 font-semibold">Q{idx + 1}: {item.question}</div>
+                  <p className="mb-1"><span className="font-semibold">Your Answer:</span> {getUserAnswerText()}</p>
+                  <div className="mb-1"><span className="font-semibold">Correct Answer:</span> {getCorrectAnswerText()}</div>
+                  <div className="mb-1"><span className="font-semibold">Explanation:</span> {item.explanation || 'No explanation provided.'}</div>
+                  <div><span className="font-semibold">Result:</span> <span className={item.isCorrect ? 'text-green-600' : 'text-red-600'}>{item.isCorrect ? 'Correct' : 'Incorrect'}</span></div>
+                </div>
+              );
+            })
           ) : (
             <div>No feedback available.</div>
           )}
