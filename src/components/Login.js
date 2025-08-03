@@ -8,18 +8,6 @@ export default function Login({ onLogin }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      const userData = JSON.parse(user);
-      if (userData.role === 'admin') {
-        navigate('/admin-dashboard');
-      } else {
-        navigate('/student-dashboard');
-      }
-    }
-  }, [navigate]);
-
-  useEffect(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setForm({ email: '', password: '' });
@@ -38,7 +26,10 @@ export default function Login({ onLogin }) {
     try {
       console.log('Sending login data:', form); // Debug
 
-      const res = await axios.post(`/api/auth/login`, form);
+      const res = await axios.post(
+        `https://quiz-server-9.onrender.com/api/auth/login`,
+        form
+      );
 
       console.log('Login response:', res.data);
       localStorage.setItem('token', res.data.token);
@@ -84,8 +75,7 @@ export default function Login({ onLogin }) {
     if (onLogin) onLogin(null);
   };
 
-  const userItem = localStorage.getItem('user');
-  const user = userItem ? JSON.parse(userItem) : null;
+  const user = JSON.parse(localStorage.getItem('user'));
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 text-gray-900" style={{ backgroundColor: '#f3f4f6', color: '#1f2937' }}>
