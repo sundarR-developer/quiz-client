@@ -97,7 +97,7 @@ export default function Login({ onLogin }) {
           />
           <input
             name="password"
-            type="text"
+            type="password"
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
